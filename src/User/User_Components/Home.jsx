@@ -1,22 +1,14 @@
 import React from 'react'
 
 function Home() {
+    const banner = 'https://i.pinimg.com/1200x/45/cf/a8/45cfa8e8fef45c356253cf9938a4cc9c.jpg'
+    const Logo = 'https://cdn-icons-png.flaticon.com/512/2720/2720641.png'
+
     return (
-        <div className='conatiner'>
-            <div className="row">
-
-                <div className="col-sm-6  ps-5">
-                    <div className="ms-5 bg-info">
-            <img className='w-100' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZAagmp_-gSzB6QbNlRmwGJrSHYUGrXi1PCQ&usqp=CAU" alt="" />
-                    </div>
-
-                </div>
-
-                <div className="col-sm-6 bg-success p-5">
-
-                    <h1>This is User Home</h1>
-
-                </div>
+        <div >
+            <img style={{ zIndex: -1 }} className='w-100 position-absolute top-0' src={banner} alt="banner" />
+            <div className="text-center px-5">
+                <img className='Logo' src={Logo} alt="Logo" />
             </div>
         </div>
     )

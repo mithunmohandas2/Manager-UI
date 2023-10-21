@@ -6,7 +6,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate()
   const emailInput = useRef(null)
-  const Logo ='https://cdn-icons-png.flaticon.com/512/2720/2720641.png'
+  const Logo = 'https://cdn-icons-png.flaticon.com/512/2720/2720641.png'
 
   useEffect(() => {
     function focusInput() {  //focus on email input field
@@ -21,9 +21,9 @@ function Login() {
       setEmail((email).toLowerCase().trimEnd())
 
       console.log(email, password)   //test mode
-      
+
       //check from database
-     
+
 
     } catch (error) {
       console.log(error.message);
@@ -33,7 +33,7 @@ function Login() {
 
 
   const backgroundImageStyle = {
-    backgroundImage: `url('https://i1.wp.com/www.dsims.org.in/wp-content/uploads/sites/3/2019/12/LeadersInMaking-1.jpg?fit=1350%2C587&ssl=1')`,
+    backgroundImage: `url('https://img.freepik.com/premium-photo/abstract-background-images-wallpaper-ai-generated_643360-29208.jpg')`,
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
@@ -44,9 +44,9 @@ function Login() {
 
       <div className="row mx-5 p-4 ">
         <div className="col-12 col-md-4 p-4"></div>
-        <div className="col-12 col-md-4 p-4 box mt-4" style={{backgroundColor:'honeydew', borderRadius:20}}>
+        <div className="col-12 col-md-4 p-4 box mt-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.3)', borderRadius: 20 }}>
           <div className="text-center">
-            <img width="141em" src={Logo} alt='Logo'></img>
+            <img width="141em" src={Logo} alt='Logo' className='Logo'></img>
           </div>
 
           <div className="p-3">
@@ -69,7 +69,7 @@ function Login() {
                 </div>
 
                 <div className="text-center mb-2">
-                  <button type="submit" className="btn btn-primary w-50 my-1">Login</button>
+                  <button type="submit" className=" w-50 my-1">Login</button>
                 </div>
                 <p className="text-center">Dont have an account? <span onClick={() => navigate("/signup")} style={{ cursor: 'pointer' }}>Signup</span></p>
               </div>

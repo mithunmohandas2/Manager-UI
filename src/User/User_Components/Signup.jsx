@@ -31,7 +31,7 @@ function Signup() {
   }
 
   const backgroundImageStyle = {
-    backgroundImage: `url('https://i1.wp.com/www.dsims.org.in/wp-content/uploads/sites/3/2019/12/LeadersInMaking-1.jpg?fit=1350%2C587&ssl=1')`,
+    backgroundImage: `url('https://img.freepik.com/premium-photo/abstract-background-images-wallpaper-ai-generated_643360-29208.jpg')`,
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
@@ -39,11 +39,11 @@ function Signup() {
 
   return (
     <div className='py-4' style={backgroundImageStyle}>
-       <div className="row mx-5 p-4 ">
+      <div className="row mx-5 p-4 ">
         <div className="col-12 col-md-4 p-4"></div>
-        <div className="col-12 col-md-4 p-4 box mt-4" style={{backgroundColor:'honeydew', borderRadius:20}}>
+        <div className="col-12 col-md-4 p-4 box mt-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.3)', borderRadius: 20 }}>
           <div className="text-center">
-            <img width="120em" src={Logo} alt='Logo'></img>
+            <img width="120em" src={Logo} alt='Logo' className='Logo' />
           </div>
 
 
@@ -53,7 +53,7 @@ function Signup() {
 
                 <div className="mb-3">
                   <label htmlFor="text" className="form-label">Name</label>
-                  <input type="text" placeholder="Enter your first name" pattern="[A-Za-z ]*" minLength="3"
+                  <input type="text" placeholder="Enter your full name" pattern="[A-Za-z ]*" minLength="3"
                     name="firstName" className="form-control" id="firstName" required ref={inputFocus}
                     value={name} onChange={(input) => setName(input.target.value.trimStart())} />
                 </div>
@@ -80,7 +80,7 @@ function Signup() {
                 </div>
 
                 <div className="text-center mb-2">
-                  <button type="submit" className="btn btn-primary w-50">Signup</button>
+                  <button type="submit" className="w-50">Signup</button>
                 </div>
                 <p className="text-center">Already have account? <span onClick={() => navigate("/login")} style={{ cursor: 'pointer' }}>Login</span></p>
               </div>
