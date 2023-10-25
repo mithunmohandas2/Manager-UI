@@ -1,20 +1,26 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'
+import { baseUrlContext } from '../../store/context';
+import Swal from 'sweetalert2';
+
 function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate()
+  const Navigate = useNavigate()
   const inputFocus = useRef(null)
   const Logo = 'https://cdn-icons-png.flaticon.com/512/2720/2720641.png'
+  const { baseUrlAPI } = useContext(baseUrlContext)
+
 
   useEffect(() => {
     function focusInput() {   //focus on name input field
       inputFocus.current.focus();
     }
     focusInput()
-  }, [navigate])
+  }, [Navigate])
 
   const handleSignup = async (event) => {     //Submit the signup data and redirect to login
     try {
@@ -22,11 +28,34 @@ function Signup() {
       setName(name.trimEnd());
       setEmail((email).toLowerCase().trimEnd())
 
-      console.log(name, email, phone, password)   //test mode
+      // console.log(name, email, phone, password)   //test mode
+
+      const url = baseUrlAPI + '/register';    //Signup API endpoint
+      const data = { email, name, phone, password };
+
+      await axios.post(url, data)               //check from database
+        .then(response => {
+          console.log('Response:', response.data);                   // all the user data received
+          if (response.data.error) throw Error(response.data.error)  //if any error throw error 
+          Swal.fire({
+            icon: 'success',
+            title: "Signup successful",
+            text:"Please Login to continue"
+          })
+          Navigate('/login')                                          // signup Success 
+        })
+        .catch(error => {
+          // console.error('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: error.message,
+          })
+        });
 
 
     } catch (error) {
       console.log(error.message);
+      res.json({ error: error.message })
     }
   }
 
@@ -54,7 +83,7 @@ function Signup() {
                 <div className="mb-3">
                   <label htmlFor="text" className="form-label">Name</label>
                   <input type="text" placeholder="Enter your full name" pattern="[A-Za-z ]*" minLength="3"
-                    name="firstName" className="form-control" id="firstName" required ref={inputFocus}
+                    name="name" className="form-control" id="name" required ref={inputFocus}
                     value={name} onChange={(input) => setName(input.target.value.trimStart())} />
                 </div>
 
@@ -82,7 +111,7 @@ function Signup() {
                 <div className="text-center mb-2">
                   <button type="submit" className="w-50">Signup</button>
                 </div>
-                <p className="text-center">Already have account? <span onClick={() => navigate("/login")} style={{ cursor: 'pointer' }}>Login</span></p>
+                <p className="text-center">Already have account? <span onClick={() => Navigate("/login")} style={{ cursor: 'pointer' }}>Login</span></p>
               </div>
             </form>
           </div>

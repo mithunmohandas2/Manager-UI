@@ -1,5 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { baseUrlContext } from '../../store/context';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -7,28 +10,43 @@ function Login() {
   const navigate = useNavigate()
   const emailInput = useRef(null)
   const Logo = 'https://cdn-icons-png.flaticon.com/512/2720/2720641.png'
+  const { baseUrlAPI } = useContext(baseUrlContext)
+  const Navigate = useNavigate()
 
   useEffect(() => {
-    function focusInput() {  //focus on email input field
+    function focusInput() {                 //focus on email input field
       emailInput.current.focus();
     }
     focusInput()
   }, [navigate])
 
-  const handleLogin = async (event) => {      //Submit the Login data and redirect to Home
+  const handleLogin = async (event) => {    //Submit the Login data and redirect to Home
     try {
       event.preventDefault()
       setEmail((email).toLowerCase().trimEnd())
 
-      console.log(email, password)   //test mode
+      // console.log(email, password)        //test mode
 
-      //check from database
-
+      const url = baseUrlAPI + '/login';    // Verify Login API endpoint
+      const data = { email, password, };
+      
+      await axios.post(url, data)               //check from database
+        .then(response => {
+          console.log('Response:', response.data);                   // all the user data received
+          if (response.data.error) throw Error(response.data.error)  //if any error throw error 
+          Navigate('/home')                                          // Login Success 
+        })
+        .catch(error => {
+          // console.error('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: error.message,
+          })
+        });
 
     } catch (error) {
       console.log(error.message);
     }
-
   }
 
 
