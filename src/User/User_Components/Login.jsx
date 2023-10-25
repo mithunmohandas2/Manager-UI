@@ -7,7 +7,6 @@ import Swal from 'sweetalert2';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate()
   const emailInput = useRef(null)
   const Logo = 'https://cdn-icons-png.flaticon.com/512/2720/2720641.png'
   const { baseUrlAPI } = useContext(baseUrlContext)
@@ -18,7 +17,7 @@ function Login() {
       emailInput.current.focus();
     }
     focusInput()
-  }, [navigate])
+  }, [Navigate])
 
   const handleLogin = async (event) => {    //Submit the Login data and redirect to Home
     try {
@@ -89,7 +88,7 @@ function Login() {
                 <div className="text-center mb-2">
                   <button type="submit" className=" w-50 my-1">Login</button>
                 </div>
-                <p className="text-center">Dont have an account? <span onClick={() => navigate("/signup")} style={{ cursor: 'pointer' }}>Signup</span></p>
+                <p className="text-center">Dont have an account? <span onClick={() => Navigate("/signup")} style={{ cursor: 'pointer' }}>Signup</span></p>
               </div>
             </form>
           </div>

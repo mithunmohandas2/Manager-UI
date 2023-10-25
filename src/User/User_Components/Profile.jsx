@@ -1,5 +1,6 @@
 import React from 'react'
 import EditProfile from './EditProfile'
+import EditProfilePic from './EditProfilePic'
 
 function Profile() {
     return (
@@ -8,6 +9,7 @@ function Profile() {
 
                 <div className="col-sm-6  pt-3 pb-5">
                     <div className="mx-5">
+                    <EditProfilePic></EditProfilePic>
                         <img className='w-100' src="https://www.thinkingheads.com/wp-content/uploads/2019/11/will-smith-speaker-entertainment-actor-thinking-heads.jpg" alt="Profile-Photo" />
                     </div>
 
