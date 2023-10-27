@@ -5,11 +5,11 @@ function EditProfilePic() {
     return (
         <>
             {/* <!-- Button trigger modal --> */}
-            <img style={{ width: 45, cursor: 'pointer',position: 'absolute' }} src="https://static.thenounproject.com/png/4879835-200.png" alt="profilePicEdit" data-bs-toggle="modal" data-bs-target="#staticBackdrop" />
+            <img style={{ width: 45, cursor: 'pointer',position: 'absolute' }} src="https://static.thenounproject.com/png/4879835-200.png" alt="profilePicEdit" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" />
 
 
             {/* <!-- Modal --> */}
-            <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div className="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">

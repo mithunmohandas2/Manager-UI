@@ -3,13 +3,15 @@ import EditProfile from './EditProfile'
 import EditProfilePic from './EditProfilePic'
 
 function Profile() {
+    const userID =''
+
     return (
         <div className='conatiner'>
             <div className="row mx-0">
 
                 <div className="col-sm-6  pt-3 pb-5">
                     <div className="mx-5">
-                    <EditProfilePic></EditProfilePic>
+                    <EditProfilePic />   
                         <img className='w-100' src="https://www.thinkingheads.com/wp-content/uploads/2019/11/will-smith-speaker-entertainment-actor-thinking-heads.jpg" alt="Profile-Photo" />
                     </div>
 

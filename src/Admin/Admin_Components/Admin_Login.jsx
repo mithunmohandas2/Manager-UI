@@ -33,7 +33,7 @@ function Admin_Login() {
 
       await axios.post(url, data)               //check from database
         .then(response => {
-          console.log('Response:', response.data);                   // all the user data received
+          // console.log('Response:', response.data);                   // all the user data received
           if (response.data.error) throw Error(response.data.error)  //if any error throw error 
           navigate('/admin/dashboard')                                          // Login Success 
         })

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'
 import { baseUrlContext } from '../../store/context';
+import axios from 'axios'
 import Swal from 'sweetalert2';
 
 function Signup() {
