@@ -2,15 +2,17 @@ import React, { useContext, useEffect, useState } from 'react'
 import { baseUrlContext } from '../../store/context';
 import axios from 'axios';
 import EditProfile from '../../User/User_Components/EditProfile';
+import EditUserData from '../../User/User_Components/EditUserData';
 import Swal from 'sweetalert2';
 
 function Dashboard() {
-    const [users, setUsers] = useState(null)
-    const { baseUrlAPI } = useContext(baseUrlContext)
+    const [users, setUsers] = useState(null);
+    const { baseUrlAPI } = useContext(baseUrlContext);
     const url = baseUrlAPI + '/admin/loadUsers';    // Get all users API endpoint
     const searchUrl = baseUrlAPI + '/admin/userSearch';    // search Users API endpoint
-    const [searchData, setSearchData] = useState("")
-    const [newUser, setNewUser] = useState(false)
+    const [searchData, setSearchData] = useState("");
+    const [newUser, setNewUser] = useState(false);
+    const [editUserData, setEditUserData] = useState(null);
 
     useEffect(() => {
         async function getUserData() {
@@ -73,6 +75,14 @@ function Dashboard() {
             });
     }
 
+    const editHelper = async (user) => {
+        if (user) {
+            setEditUserData(user)
+            console.log(editUserData)
+            $('#editUserModal').modal('show');
+        }
+    };
+
     return (
         <div>
             <h3 className='text-center my-4'>User Management</h3>
@@ -109,7 +119,7 @@ function Dashboard() {
                                 <td>{user.email}</td>
                                 <td>{user.phone}</td>
                                 <td className='row mx-0  p-2' >
-                                    <button className='col-5 mx-1' ><img style={{ width: 25, cursor: 'pointer' }} src="https://cdn-icons-png.flaticon.com/512/3597/3597075.png" alt="Edit" /></button>
+                                    <button className='col-5 mx-1' onClick={() => editHelper(user)}><img style={{ width: 25, cursor: 'pointer' }} src="https://cdn-icons-png.flaticon.com/512/3597/3597075.png" alt="EditUser"/></button>
                                     <button className='col-5 mx-1' onClick={() => deleteUser(user)} ><img style={{ width: 28 }} src="https://cdn.iconscout.com/icon/free/png-256/free-delete-4095676-3389247.png?f=webp" alt="Delete" /></button>
                                 </td>
                             </tr>
@@ -118,6 +128,8 @@ function Dashboard() {
                 </tbody>
             </table>
 
+
+            {editUserData && <EditUserData admin userData={editUserData} />}
         </div>
     )
 }

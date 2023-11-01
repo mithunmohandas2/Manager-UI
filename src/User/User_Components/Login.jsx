@@ -41,10 +41,7 @@ function Login() {
         })
         .catch(error => {
           // console.error('Error:', error);
-          Swal.fire({
-            icon: 'error',
-            title: error.message,
-          })
+          Swal.fire({ icon: 'error', title: error.message, })
         });
 
     } catch (error) {

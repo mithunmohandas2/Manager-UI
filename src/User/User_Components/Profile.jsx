@@ -1,9 +1,11 @@
 import React from 'react'
-import EditProfile from './EditProfile'
+import EditUserData from './EditUserData'
 import EditProfilePic from './EditProfilePic'
+import { useSelector } from 'react-redux'
 
 function Profile() {
-    const userID =''
+    const { userData } = useSelector((state) => state.user)
+    console.log(userData)
 
     return (
         <div className='conatiner'>
@@ -11,8 +13,8 @@ function Profile() {
 
                 <div className="col-sm-6  pt-3 pb-5">
                     <div className="mx-5">
-                    <EditProfilePic />   
-                        <img className='w-100' src="https://www.thinkingheads.com/wp-content/uploads/2019/11/will-smith-speaker-entertainment-actor-thinking-heads.jpg" alt="Profile-Photo" />
+                        <EditProfilePic />
+                        <img className='w-100' src={userData?.profilePic ?? "https://www.thinkingheads.com/wp-content/uploads/2019/11/will-smith-speaker-entertainment-actor-thinking-heads.jpg"} alt="Profile-Photo" />
                     </div>
 
                 </div>
@@ -21,13 +23,13 @@ function Profile() {
                     <div className='card p-3 mx-3 bg-light' style={{ borderRadius: 10 }}>
                         <h3>User Details</h3> <hr />
                         <div className="text-end">
-                            <EditProfile title='Edit Details'/>
+                            <EditUserData title='Edit Details' />
                         </div>
-
-                        <p><span className='fw-bold'>User ID : </span> 1121</p>
-                        <p><span className='fw-bold'>Name : </span> Brad Pitt</p>
-                        <p><span className='fw-bold'>Email : </span> Brad Pitt@gmail.com</p>
-                        <p><span className='fw-bold'>Phone : </span> 77864467576</p>
+                        <br />
+                        <p><span className='fw-bold'>User ID : </span>  {userData ? userData._id : ''}</p>
+                        <p><span className='fw-bold'>Name : </span> {userData ? userData.name : ''}</p>
+                        <p><span className='fw-bold'>Email : </span>  {userData ? userData.email : ''}</p>
+                        <p><span className='fw-bold'>Phone : </span>  {userData ? userData.phone : ''}</p>
 
                     </div> <br />
                 </div>
