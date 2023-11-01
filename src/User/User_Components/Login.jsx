@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { baseUrlContext } from '../../store/context';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { useDispatch } from 'react-redux';
+import { login } from '../../features/user/userSlice'
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -11,6 +13,7 @@ function Login() {
   const Logo = 'https://cdn-icons-png.flaticon.com/512/2720/2720641.png'
   const { baseUrlAPI } = useContext(baseUrlContext)
   const Navigate = useNavigate()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     function focusInput() {                 //focus on email input field
@@ -28,11 +31,12 @@ function Login() {
 
       const url = baseUrlAPI + '/login';    // Verify Login API endpoint
       const data = { email, password, };
-      
+
       await axios.post(url, data)               //check from database
         .then(response => {
-          console.log('Response:', response.data);                   // all the user data received
           if (response.data.error) throw Error(response.data.error)  //if any error throw error 
+          // console.log('Response:', response.data);  // all the user data received
+          dispatch(login(response.data))                              // Saving data to redux
           Navigate('/home')                                          // Login Success 
         })
         .catch(error => {

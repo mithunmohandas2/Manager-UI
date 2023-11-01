@@ -4,31 +4,28 @@ import axios from 'axios';
 import EditProfile from '../../User/User_Components/EditProfile';
 import Swal from 'sweetalert2';
 
-
 function Dashboard() {
     const [users, setUsers] = useState(null)
     const { baseUrlAPI } = useContext(baseUrlContext)
     const url = baseUrlAPI + '/admin/loadUsers';    // Get all users API endpoint
     const searchUrl = baseUrlAPI + '/admin/userSearch';    // search Users API endpoint
     const [searchData, setSearchData] = useState("")
+    const [newUser, setNewUser] = useState(false)
 
     useEffect(() => {
         async function getUserData() {
             await axios.get(url)
                 .then(response => {
-                    // console.log('Response:', response.data);                   // all users data received (test)
                     if (response.data.error) throw Error(response.data.error)  //if any error throw error 
+                    // console.log('Response:', response.data);                   // all users data received (test)
                     setUsers(response.data)
                 })
                 .catch(error => {
-                    Swal.fire({
-                        icon: 'error',
-                        title: error.message,
-                    })
+                    Swal.fire({ icon: 'error', title: error.message })
                 });
         }
         getUserData()     //function invoke
-    }, [])
+    }, [newUser])
 
     async function handleSearchUser() {
         await axios.post(searchUrl, { searchData })
@@ -38,19 +35,49 @@ function Dashboard() {
                 setUsers(response.data)                                          // Login Success 
             })
             .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: error.message,
-                })
+                Swal.fire({ icon: 'error', title: error.message })
+                if (error.message === 'Token misssing, Please login again' || error.message === 'invalid token') {
+                    Nav
+                }
             });
     }
 
+    const handleNewUserChange = () => {
+        setNewUser(!newUser);
+    };
+
+    const deleteUser = async (user) => {
+        // console.log(user)
+        Swal.fire({
+            title: `Do you want to delete ${user.name} (${user.admin ? 'admin' : "user"})?`,
+            text: 'Once deleted, cannot be reverted',
+            showDenyButton: true, showCancelButton: true, showConfirmButton: false, denyButtonText: `Delete`
+        })
+            .then((result) => {
+                if (result.isDenied) {  // confirmation recieved for deletion
+                    deleteHelper(user)
+                }
+            })
+    };
+
+    async function deleteHelper(user) {
+        await axios.post(baseUrlAPI + '/admin/deleteUser', { _id: user._id })
+            .then(response => {
+                if (response.data.error) throw Error(response.data.error)  //if any error throw error 
+                // console.log('Response:', response.data);                   // delete users data received (test)
+                Swal.fire(`${user.name} (${user.admin ? 'admin' : "user"}) deleted!`, '', 'success')
+                setNewUser(!newUser);
+            })
+            .catch(error => {
+                Swal.fire({ icon: 'error', title: error.message, })
+            });
+    }
 
     return (
         <div>
             <h3 className='text-center my-4'>User Management</h3>
             <div className="container">
-                <EditProfile addUser />
+                <EditProfile addUser={handleNewUserChange} />
                 <div className="text-end mt-3">
                     <div className="d-flex">
                         <input type="text" className='form-control w-25' value={searchData} onChange={(e) => setSearchData(e.target.value)} />
@@ -83,7 +110,7 @@ function Dashboard() {
                                 <td>{user.phone}</td>
                                 <td className='row mx-0  p-2' >
                                     <button className='col-5 mx-1' ><img style={{ width: 25, cursor: 'pointer' }} src="https://cdn-icons-png.flaticon.com/512/3597/3597075.png" alt="Edit" /></button>
-                                    <button className='col-5 mx-1'><img style={{ width: 28 }} src="https://cdn.iconscout.com/icon/free/png-256/free-delete-4095676-3389247.png?f=webp" alt="Delete" /></button>
+                                    <button className='col-5 mx-1' onClick={() => deleteUser(user)} ><img style={{ width: 28 }} src="https://cdn.iconscout.com/icon/free/png-256/free-delete-4095676-3389247.png?f=webp" alt="Delete" /></button>
                                 </td>
                             </tr>
                         )

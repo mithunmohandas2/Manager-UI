@@ -4,10 +4,11 @@ import axios from 'axios'
 import Swal from 'sweetalert2';
 
 function EditProfile(props) {
+    const { addUser } = props
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
-    const [password, setPassword] = useState(!props.addUser ? '' : 'password');
+    const [password, setPassword] = useState(!addUser ? '' : 'password');
     const [adminStatus, setAdminStatus] = useState(false)
     const inputFocus = useRef(null)
     const { baseUrlAPI } = useContext(baseUrlContext)
@@ -18,7 +19,7 @@ function EditProfile(props) {
             e.preventDefault()
             setName(name.trimEnd());
             setEmail((email).toLowerCase().trimEnd())
-            if (props.addUser) return handleAddProfile()  // if add user component use add user function
+            if (addUser) return handleAddProfile()  // if add user component use add user function
 
             console.log(name, email, phone, password, adminStatus)   //test mode
 
@@ -30,25 +31,27 @@ function EditProfile(props) {
     async function handleAddProfile() {
         //code to add new user here
         try {
-            console.log('add user =>',name, email, phone, password, adminStatus)   //test mode
+            // console.log('add user =>',name, email, phone, password, adminStatus)   //test mode
 
             const url = baseUrlAPI + '/register';    //Signup API endpoint
             const data = { email, name, phone, password, admin: adminStatus };
 
             await axios.post(url, data)               //check from database
                 .then(response => {
-                    console.log('Response:', response.data);                   // all the user data received
                     if (response.data.error) throw Error(response.data.error)  //if any error throw error 
+                    // console.log('Response:', response.data);          // all the user data received 
+                    addUser();
+
                     Swal.fire({
                         icon: 'success',
                         title: "New user created successfully",
                         text: "Default password : 'password'",
-                      
+
                     }).then((result) => {
                         if (result.isConfirmed) {
                             $('#staticBackdrop').modal('hide');  // Close the modal when SweetAlert is confirmed
                         }
-                      });
+                    });
                 })
                 .catch(error => {
                     // console.error('Error:', error);
@@ -57,7 +60,7 @@ function EditProfile(props) {
                         title: error.message,
                     })
                 });
-                
+
 
         } catch (error) {
             console.log(error.message);
@@ -76,8 +79,8 @@ function EditProfile(props) {
     return (
         <div>
             {/* <!-- Button trigger modal --> */}
-            {!props.addUser && <img style={{ width: 25, cursor: 'pointer' }} src="https://cdn-icons-png.flaticon.com/512/3597/3597075.png" alt="EditUser" data-bs-toggle="modal" data-bs-target="#staticBackdrop" />}
-            {props.addUser &&
+            {!addUser && <img style={{ width: 25, cursor: 'pointer' }} src="https://cdn-icons-png.flaticon.com/512/3597/3597075.png" alt="EditUser" data-bs-toggle="modal" data-bs-target="#staticBackdrop" />}
+            {addUser &&
                 <button className='d-flex ps-2' data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                     <p className='my-auto mx-2'>ADD USER</p> <img style={{ width: 35, cursor: 'pointer' }} src="https://cdn-icons-png.flaticon.com/512/7351/7351512.png" alt="AddUser" />
                 </button>
@@ -117,14 +120,14 @@ function EditProfile(props) {
                                             value={phone} onChange={(input) => setPhone(input.target.value.trimStart())} />
                                     </div>
 
-                                    {!props.addUser && <div className="mb-3">
+                                    {!addUser && <div className="mb-3">
                                         <label htmlFor="password" className="form-label">Password</label>
                                         <input type="password" name="password" className="form-control" placeholder="Enter password" id="password"
                                             // pattern="^(?=.*[A-Za-z0-9])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-=|]).{6,}$" 
                                             required minLength='6' value={password} onChange={(input) => setPassword(input.target.value)} />
                                     </div>}
 
-                                    {props.addUser && <div className="mb-3">
+                                    {addUser && <div className="mb-3">
                                         <label htmlFor="AdminStatus" className="form-label">User Status</label>
                                         <select className='form-control' onChange={(input) => setAdminStatus(input.target.value)}>
                                             <option value="true">Admin</option>
@@ -133,8 +136,8 @@ function EditProfile(props) {
                                     </div>}
 
                                     <div className="text-center my-4">
-                                        {!props.addUser && <button type="submit" className=" w-50" >Update</button>}
-                                        {props.addUser && <button type="submit" className=" w-50" >Add User</button>}
+                                        {!addUser && <button type="submit" className=" w-50" >Update</button>}
+                                        {addUser && <button type="submit" className=" w-50" >Add User</button>}
                                     </div>
                                 </div>
                             </form>
