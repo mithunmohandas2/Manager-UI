@@ -13,7 +13,7 @@ function EditProfilePic() {
     const dispatch = useDispatch()
 
     async function uploadImage() {
-        console.log(profilePic)
+        // console.log(profilePic)
         try {
             const url = baseUrlAPI + '/uploadPhoto';    // Upload Profile pic API endpoint
             const formData = new FormData();

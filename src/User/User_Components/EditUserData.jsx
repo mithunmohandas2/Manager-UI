@@ -3,6 +3,8 @@ import { baseUrlContext } from '../../store/context';
 import axios from 'axios'
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux';
+import { login } from '../../features/user/userSlice'
 
 
 function EditUserData(props) {
@@ -17,6 +19,7 @@ function EditUserData(props) {
     const [adminStatus, setAdminStatus] = useState(userData ? userData.admin : false)
     const inputFocus = useRef(null)
     const { baseUrlAPI } = useContext(baseUrlContext)
+    const dispatch = useDispatch()
 
     async function handleSubmit(e) {
         //code to edit profile 
@@ -34,6 +37,7 @@ function EditUserData(props) {
                 .then(response => {
                     if (response.data.error) throw Error(response.data.error)  //if any error throw error 
                     console.log('Response:', response.data);          // all the user data received 
+                    if (!admin) dispatch(login(response.data))         // updating redux state with edited data
 
                     Swal.fire({
                         icon: 'success',
@@ -42,6 +46,7 @@ function EditUserData(props) {
 
                     }).then((result) => {
                         if (result.isConfirmed) {
+                            $('#editUserModal').modal('hide');  // Close the modal when SweetAlert is confirmed
                             $('#staticBackdrop').modal('hide');  // Close the modal when SweetAlert is confirmed
                         }
                     });
