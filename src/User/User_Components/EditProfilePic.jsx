@@ -2,11 +2,15 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { baseUrlAPI } from '../../store/context'
+import { useDispatch } from 'react-redux';
+import { login } from '../../features/user/userSlice'
+import Swal from 'sweetalert2';
 
 function EditProfilePic() {
     const [image, setImage] = useState(null)
     const [profilePic, setProfilePic] = useState(null)
     const { userData } = useSelector((state) => state.user)
+    const dispatch = useDispatch()
 
     async function uploadImage() {
         console.log(profilePic)
@@ -20,6 +24,10 @@ function EditProfilePic() {
                 headers: {
                     'Content-Type': 'multipart/form-data', // for multer to recognize the form data
                 },
+            }).then((response)=>{
+                dispatch(login(response.data))         // updating redux state with photo
+                $('#staticBackdrop2').modal('hide');  // Close the modal when success
+
             })
                 .catch(error => {
                     Swal.fire({ icon: 'error', title: error.message, })

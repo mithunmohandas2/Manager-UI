@@ -1,11 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import EditUserData from './EditUserData'
 import EditProfilePic from './EditProfilePic'
 import { useSelector } from 'react-redux'
+import { baseUrlAPI } from '../../store/context'
 
 function Profile() {
     const { userData } = useSelector((state) => state.user)
     console.log(userData)
+    const imageURL = userData.profilePic ? userData.profilePic : null
+
+    useEffect(() => {
+        // console.log(userData)
+    }, [userData])
+
 
     return (
         <div className='conatiner'>
@@ -14,7 +21,7 @@ function Profile() {
                 <div className="col-sm-6  pt-3 pb-5">
                     <div className="mx-5">
                         <EditProfilePic />
-                        <img className='w-100' src={userData?.profilePic ?? "https://www.thinkingheads.com/wp-content/uploads/2019/11/will-smith-speaker-entertainment-actor-thinking-heads.jpg"} alt="Profile-Photo" />
+                        <img className='w-100' src={imageURL ? baseUrlAPI + '\\' + imageURL : "https://t4.ftcdn.net/jpg/04/00/24/31/360_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg"} alt="Profile-Photo" />
                     </div>
 
                 </div>
