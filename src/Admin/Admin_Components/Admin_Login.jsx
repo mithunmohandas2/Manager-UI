@@ -17,6 +17,11 @@ function Admin_Login() {
 
 
   useEffect(() => {
+    const token = localStorage.getItem("token")
+    console.log(token)
+    if (token) {
+      navigate('/admin/dashboard')
+    }
     function focusInput() {  //focus on email input field
       emailInput.current.focus();
     }

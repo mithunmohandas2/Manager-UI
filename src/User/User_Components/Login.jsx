@@ -16,6 +16,9 @@ function Login() {
   const dispatch = useDispatch()
 
   useEffect(() => {
+    if (localStorage.getItem("token")) {
+      Navigate('/home')
+    }
     function focusInput() {                 //focus on email input field
       emailInput.current.focus();
     }

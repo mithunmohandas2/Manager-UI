@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { baseUrlContext } from '../../store/context';
 import axios from 'axios';
 import EditProfile from '../../User/User_Components/EditProfile';
-import EditUserData from '../../User/User_Components/EditUserData';
+// import AdminEditUserData from './AdminEditUserData'
 import Swal from 'sweetalert2';
 
 function Dashboard() {
@@ -13,6 +13,13 @@ function Dashboard() {
     const [searchData, setSearchData] = useState("");
     const [newUser, setNewUser] = useState(false);
     const [editUserData, setEditUserData] = useState(null);
+
+    //user Data edit
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [password, setPassword] = useState('');
+    const [adminStatus, setAdminStatus] = useState('');
 
     useEffect(() => {
         async function getUserData() {
@@ -78,10 +85,102 @@ function Dashboard() {
     const editHelper = async (user) => {
         if (user) {
             setEditUserData(user)
-            console.log(editUserData)
-            $('#editUserModal').modal('show');
-        }
+            // console.log(editUserData)
+            // $('#editUserModal').modal('show');
+            setName(user.name)
+            setEmail(user.email)
+            setPhone(user.phone)
+            setAdminStatus(user.admin)
+            setPassword(user.password)
+            
+
+            Swal.fire({
+                title: `Edit ${user.name} (${user.admin ? 'admin' : "user"})?`,
+                html: `
+                <form class="formData px-4" onsubmit="handleSubmit(event)">
+                <div class="col-12 px-2">
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label">Name</label>
+                        <input type="text" placeholder="Enter your full name" pattern="[A-Za-z ]*" minlength="3" name="firstName" class="form-control" required value="${name}" oninput="setName(this.value.trimStart())">
+                    </div>
+            
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" name="email" class="form-control"  pattern="^(?=.*[@])(?=.*[.]).{5,}$" placeholder="Enter email ID" required value="${email}" oninput="setEmail(this.value.trimStart())">
+                    </div>
+            
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone number</label>
+                        <input type="tel" name="phone" class="form-control" pattern="[0-9]*" minlength="10" placeholder="Enter contact number" required value="${phone}" oninput="setPhone(this.value.trimStart())">
+                    </div>
+            
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" placeholder="Enter password" required minlength="6" value="${password}" oninput="setPassword(this.value)">
+                    </div>
+            
+                    <div class="mb-3">
+                        <label for="AdminStatus" class="form-label">User Status</label>
+                        <select class="form-control" onchange="setAdminStatus(this.value)">
+                            <option value="true">Admin</option>
+                            <option value="false">User</option>
+                        </select>
+                    </div>
+            
+                    <div class="text-center my-4">
+                        <button type="button" class="w-50">Update</button>
+                    </div>
+                </div>
+            </form>
+            
+                `,
+                showCancelButton: false, showConfirmButton: false, confirmButtonText: `Edit`
+            })
+                .then((result) => {
+                    if (result.isDenied) {  // confirmation recieved for deletion
+                        //edit functionality
+                    }
+                })
+        };
     };
+
+
+    async function handleSubmit(event) {
+        //code to edit profile 
+        try {
+            e.preventDefault()
+            setName(name.trimEnd());
+            setEmail((email).toLowerCase().trimEnd())
+
+            const url = baseUrlAPI + `/admin/updateUser/${_id}`;    //Edit User API endpoint
+            const data = { _id, email, name, phone, admin: adminStatus, password };
+            console.log(data)   //test mode
+            console.log(url)    //test mode
+
+            // await axios.put(url, data)               //check from database
+            //     .then(response => {
+            //         if (response.data.error) throw Error(response.data.error)  //if any error throw error 
+            //         console.log('Response:', response.data);          // all the user data received 
+
+            //         Swal.fire({
+            //             icon: 'success',
+            //             title: "User data updated successfully",
+            //             text: " ",
+
+            //         }).then((result) => {
+            //             if (result.isConfirmed) {
+            //                 $('#editUserModal').modal('hide');  // Close the modal when SweetAlert is confirmed
+            //             }
+            //         });
+            //     })
+            //     .catch(error => {
+            //         Swal.fire({ icon: 'error', title: error.message, })
+            //     });
+
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
 
     return (
         <div>
@@ -100,11 +199,13 @@ function Dashboard() {
                 <thead>
                     <tr className='text-center'>
                         <th scope="col">#</th>
+                        <th scope="col">Photo</th>
                         <th scope="col">Name</th>
-                        <th scope="col">User-ID</th>
                         <th scope="col">Email</th>
                         <th scope="col">Phone</th>
+                        <th scope="col">Role</th>
                         <th scope="col">Actions</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -113,13 +214,13 @@ function Dashboard() {
                         return (
                             <tr key={user._id} className='text-center'>
                                 <th scope="row">{index + 1}</th>
-                                <td>{user.name} {user.admin ? <span className='fw-bold' style={{ fontSize: 13 }}>(ADMIN)</span> : ''}
-                                </td>
-                                <td>{user._id}</td>
+                                <td><img className='' style={{ width: 45 }} src={user.profilePic ? baseUrlAPI + '\\' + user.profilePic : "https://t4.ftcdn.net/jpg/04/00/24/31/360_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg"} alt="Profile-Photo" /></td>
+                                <td>{user.name}  </td>
                                 <td>{user.email}</td>
                                 <td>{user.phone}</td>
+                                <td style={{ fontSize: 13 }}>{user.admin ? <span className='fw-bold'>ADMIN</span> : 'USER'}</td>
                                 <td className='row mx-0  p-2' >
-                                    <button className='col-5 mx-1' onClick={() => editHelper(user)}><img style={{ width: 25, cursor: 'pointer' }} src="https://cdn-icons-png.flaticon.com/512/3597/3597075.png" alt="EditUser"/></button>
+                                    <button className='col-5 mx-1' onClick={() => editHelper(user)}><img style={{ width: 25, cursor: 'pointer' }} src="https://cdn-icons-png.flaticon.com/512/3597/3597075.png" alt="EditUser" /></button>
                                     <button className='col-5 mx-1' onClick={() => deleteUser(user)} ><img style={{ width: 28 }} src="https://cdn.iconscout.com/icon/free/png-256/free-delete-4095676-3389247.png?f=webp" alt="Delete" /></button>
                                 </td>
                             </tr>
@@ -129,7 +230,7 @@ function Dashboard() {
             </table>
 
 
-            {editUserData && <EditUserData admin userData={editUserData} />}
+            {/* {editUserData && <AdminEditUserData admin userData={editUserData} />} */}
         </div>
     )
 }

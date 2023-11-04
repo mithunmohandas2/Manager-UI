@@ -1,25 +1,19 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { baseUrlContext } from '../../store/context';
 import axios from 'axios'
 import Swal from 'sweetalert2';
-import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux';
-import { login } from '../../features/user/userSlice'
-
 
 function EditUserData(props) {
-    const { userData } = useSelector((state) => state.user)
-    const { admin } = props
+    const { userData } = props
     // console.log(userData)
     const _id = userData ? userData._id : ''
     const [name, setName] = useState(userData ? userData.name : '');
     const [email, setEmail] = useState(userData ? userData.email : '');
     const [phone, setPhone] = useState(userData ? userData.phone : '');
-    const [password, setPassword] = useState('');
+    const [password, setPassword] = useState(userData ? userData.password : 'password');
     const [adminStatus, setAdminStatus] = useState(userData ? userData.admin : false)
-    const inputFocus = useRef(null)
     const { baseUrlAPI } = useContext(baseUrlContext)
-    const dispatch = useDispatch()
+
 
     async function handleSubmit(e) {
         //code to edit profile 
@@ -29,7 +23,7 @@ function EditUserData(props) {
             setEmail((email).toLowerCase().trimEnd())
 
             const url = baseUrlAPI + `/admin/updateUser/${_id}`;    //Edit User API endpoint
-            const data = { _id, email, name, phone, password, admin: adminStatus };
+            const data = { _id, email, name, phone, admin: adminStatus, password };
             console.log(data)   //test mode
             console.log(url)    //test mode
 
@@ -37,7 +31,6 @@ function EditUserData(props) {
                 .then(response => {
                     if (response.data.error) throw Error(response.data.error)  //if any error throw error 
                     console.log('Response:', response.data);          // all the user data received 
-                    if (!admin) dispatch(login(response.data))         // updating redux state with edited data
 
                     Swal.fire({
                         icon: 'success',
@@ -47,7 +40,6 @@ function EditUserData(props) {
                     }).then((result) => {
                         if (result.isConfirmed) {
                             $('#editUserModal').modal('hide');  // Close the modal when SweetAlert is confirmed
-                            $('#staticBackdrop').modal('hide');  // Close the modal when SweetAlert is confirmed
                         }
                     });
                 })
@@ -60,17 +52,13 @@ function EditUserData(props) {
         }
     }
 
-    useEffect(() => {
-        function focusInput() {   //focus on name input field
-            inputFocus.current.focus();
-        }
-        focusInput()
-    }, [props])
 
     return (
         <div>
             {/* <!-- Button trigger modal --> */}
-            {!admin && <img style={{ width: 25, cursor: 'pointer' }} src="https://cdn-icons-png.flaticon.com/512/3597/3597075.png" alt="EditUser" data-bs-toggle="modal" data-bs-target="#editUserModal" />}
+            <button style={{ width: 58 }}>
+                <img style={{ width: 25, cursor: 'pointer' }} src="https://cdn-icons-png.flaticon.com/512/3597/3597075.png" alt="EditUser" data-bs-toggle="modal" data-bs-target="#editUserModal" />
+            </button>
 
             {/* <!-- Modal --> */}
             <div className="modal fade text-start" id="editUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
@@ -88,7 +76,7 @@ function EditUserData(props) {
                                     <div className="mb-3">
                                         <label htmlFor="text" className="form-label">Name</label>
                                         <input type="text" placeholder="Enter your full name" pattern="[A-Za-z ]*" minLength="3"
-                                            name="firstName" className="form-control" id="firstName" required ref={inputFocus}
+                                            name="firstName" className="form-control" id="firstName" required
                                             value={name} onChange={(input) => setName(input.target.value.trimStart())} />
                                     </div>
 
@@ -106,20 +94,20 @@ function EditUserData(props) {
                                             value={phone} onChange={(input) => setPhone(input.target.value.trimStart())} />
                                     </div>
 
-                                    {!admin && <div className="mb-3">
+                                    {/* <div className="mb-3">
                                         <label htmlFor="password" className="form-label">Password</label>
                                         <input type="password" name="password" className="form-control" placeholder="Enter password" id="password"
                                             // pattern="^(?=.*[A-Za-z0-9])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-=|]).{6,}$" 
                                             required minLength='6' value={password} onChange={(input) => setPassword(input.target.value)} />
-                                    </div>}
+                                    </div> */}
 
-                                    {admin && <div className="mb-3">
+                                    <div className="mb-3">
                                         <label htmlFor="AdminStatus" className="form-label">User Status</label>
                                         <select className='form-control' onChange={(input) => setAdminStatus(input.target.value)}>
                                             <option value="true">Admin</option>
                                             <option value="false">User</option>
                                         </select>
-                                    </div>}
+                                    </div>
 
                                     <div className="text-center my-4">
                                         <button type="submit" className=" w-50" >Update</button>
